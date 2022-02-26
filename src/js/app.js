@@ -7,6 +7,7 @@ import Upload from './comp/upload';
 console.log('app.js bundled');
 
 window.upload = new Upload('.file-container', new CardManager('.items'));
+console.log('Testing))))')
 // const y = new Upload('.overlap')
 // window.upload = new Upload('.file-container');
 // window.card = new CardManager('.items');
