@@ -133,6 +133,7 @@ h3 {
   /* max-width: 100%;
   min-width: 100%; */
   /* min-height: 60px; */
+  position: relative;
   cursor: grab;
   opacity: 0.5;
   border-radius: 2px;
@@ -216,7 +217,11 @@ span {
 .add:active {
   opacity: 1;
 }
-.textarea::before{
+.done {
+  /* background-color: darkorchid; */
+  font: 0.8em "Fira Sans", sans-serif;
+}
+.done::before {
   /* display: block; */
   /* position: absolute; */
   /* content: '123';
@@ -224,16 +229,22 @@ span {
   height: 50px;
   background-color: blueviolet;
   color: black; */
-
-  content: '';
-  position: absolute;
-  border-color: #009933;
-  border-style: solid;
-  border-width: 0 0.3em 0.25em 0;
+  /* width: 350px;
+  height: 50px; */
+  /* display: block; */
+  content: "Напишите что-нибудь...";
+  background-color: darkorchid;
+  /* position: relative; */
+  /* z-index: 99999; */
+  border: 2px dashed #009933;
+  border-radius: 3px;
+  padding: 5px;
+  /* border-style: solid;
+  border-width: 0 0.3em 0.25em 0;  */
   height: 1em;
   top: 1.3em;
   left: 0.6em;
   margin-top: -1em;
-  transform: rotate(45deg);
+  /* transform: rotate(45deg); */
   width: 0.5em;
 }
