@@ -81,19 +81,21 @@
 } */
 * {
   box-sizing: border-box;
+  
 }
 .file-container {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   background-color: plum;
-  width: 1000px;
+  max-width: 1000px;
   margin: 30px auto;
+  /* left: 30%; */
   padding: 20px;
   min-height: 60px;
   border-radius: 5px;
   font: 1.2em "Fira Sans", sans-serif;
-  position: relative;
+  /* position: relative; */
 }
 .container {
   border: 1px solid black;
@@ -101,6 +103,7 @@
   width: 300px;
   padding: 10px;
   min-height: 60px;
+  /* position: relative; */
 }
 h3 {
   margin: 0px;
@@ -121,6 +124,7 @@ h3 {
   min-height: 60px;
   /* margin-top: 30px; */
   /* position: relative; */
+  /* контейнер релатив, его детки - абсолют!!! */
   /* width: 300px; */
   /* width: 100%; */
 }
@@ -133,26 +137,30 @@ h3 {
   /* max-width: 100%;
   min-width: 100%; */
   /* min-height: 60px; */
-  position: relative;
+  /* position: absolute; */
   cursor: grab;
   opacity: 0.5;
   border-radius: 2px;
   width: 100%;
   margin-top: 10px;
+  /* top: 150px; */
   /* min-height: 40px; */
 
   /* padding: 10px; */
   /* margin-bottom: -1px; */
 
   list-style-type: none;
+  /* position: fixed; */
 }
 .item_card {
   cursor: grab;
   opacity: 1;
   border-radius: 2px;
-  width: 100%;
+  /* width: 100%; */
   list-style-type: none;
   margin-top: 10px;
+  /* position: absolute; */
+   /* position: relative; */
   /* margin-top: 10px; */
 }
 .button {
@@ -189,26 +197,38 @@ span {
   border-radius: 5px;
   padding: 10px;
   /* margin-bottom: -1px; */
-  max-width: 100%;
-  min-width: 100%;
+  /* max-width: 100%;
+  min-width: 100%; */
   /* min-height: 60px; */
   max-height: 300px;
   opacity: 1;
   line-height: 1.5;
-  border-radius: 5px;
+    /* position: relative; */
 }
-.items-item.dragged {
+.gost{
+ background-color: rgb(245, 199, 245); 
+ border: 1px dotted purple;
+  border-radius: 5px;
+  padding: 10px;
+ height: 50px;
+  /* opacity: 1;
+  line-height: 1.5; */
+  }
+/* .items-item.dragged {
   border-radius: 10px;
   position: absolute;
   z-index: 999;
   pointer-events: none;
   background: #fff;
-}
+} */
 .add2 {
   display: none;
 }
+.add3 {
+  display: block;
+}
 .add {
-  margin-top: 20px;
+  margin-top: 50px;
 }
 .opacity {
   opacity: 1;
@@ -248,3 +268,49 @@ span {
   /* transform: rotate(45deg); */
   width: 0.5em;
 }
+.span{
+  cursor: context-menu;
+}
+.item_remove{
+  /* position: relative; */
+  /* background-color: #a5aaa7;
+  border: 2px solid grey;
+  border-radius: 5px; */
+  content: "Х";
+
+}
+.item_remove:hover::before {
+  /* content: "Х";
+  position: absolute;
+  top: 0.5em;
+  left: 250px;
+  cursor: context-menu; */
+  /* background-color: darkorchid;
+  border: 2px dashed #009933;
+  border-radius: 3px;
+  padding: 5px;
+  height: 1em;
+  top: 1.3em;
+  left: 0.6em;
+  margin-top: -1em;  
+  width: 0.5em; */
+  content: "Х";
+  top: 1.5em;
+  left: 250px;
+  position: relative;
+  cursor: context-menu; 
+}
+.dragged{
+  /* border-radius: 10px; */
+  /* cursor: grab; */
+  position: absolute;
+  
+  /* top: 0;
+  left: 0; */
+  z-index: 999;
+  pointer-events: none;
+  /* width: 100%; */
+  width: 300px;
+  /* background: #fff; */
+}
+

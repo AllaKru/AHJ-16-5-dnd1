@@ -1,105 +1,169 @@
-import CardManager from "./cardManager";
+/* eslint-disable no-console */
+// eslint-disable-next-line import/no-cycle
+import CardManager from './cardManager';
 
 export default class Upload {
-   constructor(element, cardManager) {
-      if (typeof element === 'string') {
-         element = document.querySelector(element);
+  constructor(element, cardManager) {
+    if (typeof element === 'string') {
+      // eslint-disable-next-line no-param-reassign
+      element = document.querySelector(element);
+    }
+
+    this.element = element;
+
+    if (localStorage.getItem('value')) {
+      this.element.innerHTML = JSON.parse(localStorage.getItem('value'));
+    }
+    // а после идет привязывание innerHTML так как
+    // В innerHTML нет слушателей событий. Вам нужно пройти
+    // по кнопкам/элементам и подсоединить обработчики.
+
+    this.activeDragElement = undefined;
+    this.gost = undefined;
+    this.element1 = undefined;
+
+    this.onClick = this.onClick.bind(this);
+    this.onStartDrag = this.onStartDrag.bind(this);
+    this.onEndDrag = this.onEndDrag.bind(this);
+    this.onDrag = this.onDrag.bind(this);
+    this.onRemove = this.onRemove.bind(this);
+    this.oncardManager = this.oncardManager.bind(this);
+
+    this.cardManager = cardManager;
+    this.arr = this.element.querySelectorAll('.add');
+
+    this.element.addEventListener('click', this.onClick);
+    // this.element.addEventListener('click', this.oncardManager);
+    this.element.addEventListener('click', this.onRemove);
+    // this.element.addEventListener('mousedown', this.onStartDrag);
+    // Array.from(this.element.querySelectorAll('.item_remove')).forEach((el) => {
+    //   el.addEventListener('click', this.onRemove);
+    // });
+    this.element.querySelectorAll('.item_card').forEach((el) => {
+      el.addEventListener('mousedown', this.onStartDrag);
+    });
+  }
+
+  oncardManager(e) {
+    this.element.querySelectorAll('.container').forEach((el) => {
+      if (el === e.target.closest('.container')) {
+        this.cardManager = new CardManager(e.target.closest('.container'));
       }
-      this.onClick = this.onClick.bind(this);
-      this.onLoad = this.onLoad.bind(this);
-      // this.addCard = this.addCard.bind(this);
-      this.element = element;
-      // this.input = this.el.querySelector('.overlapped');
-      this.cardManager = cardManager;
-      this.arr = this.element.querySelectorAll('.add');
-      this.element.addEventListener('click', this.onClick);
-      window.onload = this.onLoad();
-      // this.element.addEventListener('click', this.addCard);
-      // this.element.addEventListener('change', this.onUpload);
-      // this.input.click()
-   }
+    });
+  }
 
-   onClick(e) {
-      // this.input.click();
-      e.preventDefault();
-      this.arr.forEach((element) => {
-         if (e.target === element) {
-            // e.target.classList.add('add');
-            // if (e.target.classList.contains('opacity')){
-            //    e.target.classList.remove('opacity');
-            // } else {
-            //    e.target.classList.add('opacity');
-            // }
+  onClick(e) {
+    e.preventDefault();
+    this.oncardManager(e);
 
-            // this.cardManager = new CardManager('.items')
+    this.arr.forEach((element) => {
+      if (e.target === element) {
+        this.cardManager.onClick(e);
+      }
+    });
+  }
 
+  onStartDrag(e) {
+    e.preventDefault();
+    this.oncardManager(e);
 
-            this.cardManager.onClick(e);
-            console.log(e.target);
-         }
-      });
+    Array.from(this.element.querySelectorAll('.item_card')).forEach((el) => {
+      if (el.querySelector('.card') === e.target) {
+        const { target } = e;
+        this.activeDragElement = target;
+        this.activeDragElement.closest('.item_card').classList.add('dragged');
 
-      // const arr = [...this.element.children];
-      // arr.forEach((element) => {
-      //    if (element === e.target) {
-      // e.target.style.opacity = 1;
+        this.gost = document.createElement('li');
+        this.gost.className = 'gost';
+        this.gost.style.display = 'none';
 
-      // console.log(arr);
-      // this.cardManager.onClick(element);
-      // const li = document.createElement('li');
-      // li.className = 'item';
-      // li.innerHTML = `<textarea class = 'textarea'
-      //  placeholder = ...></textarea>
-      //  <div class = 'block'> <button> Add card</button> <span>х</span>
-      //  </div>
-      // `;
-      // this.element.querySelector('.items').appendChild(li);
-      // console.log(123456);
+        document.documentElement.addEventListener('mouseup', this.onEndDrag);
+        document.documentElement.addEventListener('mousemove', this.onDrag);
 
-      // this.element.querySelectorAll('.tag').forEach((element) => {
-      //    element.style.opacity = 1;
-      //    console.log(e.target);
-      // });
-      // if (e.target === this.element.querySelector('.tag')){
-      //    e.target.style.opacity = 1;
-      // this.arr.forEach((element) => {
-      //    if (element === e.target) {
-      //       this.cardManager.onClick(e);
-      //    }
-      // });
+        this.onDrag(e);
+      }
+    });
+  }
 
+  onEndDrag(e) {
+    try {
+      if (this.activeDragElement) {
+        // const element = document.elementFromPoint(e.clientX, e.clientY);
+        // eslint-disable-next-line no-console
+        console.log(e);
+
+        this.activeDragElement.closest('.item_card').classList.remove('dragged');
+
+        this.element.querySelectorAll('.container').forEach((el) => {
+          console.log(this.element1);
+
+          this.element1.closest(`.${el.className}`).querySelector('.items').insertBefore(this.activeDragElement.closest('.item_card'), this.element1.closest('.item_card'));
+          this.element.querySelectorAll('.gost').forEach((el2) => {
+            el2.remove();
+          });
+        });
+
+        this.gost = undefined;
+
+        this.activeDragElement = undefined;
+      } else {
+        console.log('oshibka');
+      }
+      // document.documentElement.addEventListener('mouseup', this.onEndDrag);
+      // document.documentElement.addEventListener('mousemove', this.onDrag);
+    // eslint-disable-next-line no-shadow
+    } catch (e) {
+      console.log(e);
+    }
+
+    document.documentElement.removeEventListener('mouseup', this.onEndDrag);
+    document.documentElement.removeEventListener('mousemove', this.onDrag);
+    this.cardManager.onStorage();
+  }
+
+  onDrag(e) {
+    e.preventDefault();
+    this.element1 = document.elementFromPoint(e.clientX, e.clientY);
+    if (!this.activeDragElement || this.element1 === this.element) {
+      return;
+    }
+
+    this.gost.style.display = 'block';
+    this.gost.style.top = `${e.clientY - 20 + window.scrollY}px`;
+    this.gost.style.left = `${e.clientX - 20 + window.scrollX}px`;
+
+    this.element.querySelectorAll('.container').forEach((el) => {
+      // if (this.element1.closest(`.${el.className}`) === null) {
+      //   console.log(this.element1);
       // }
-   }
 
-   onLoad() {
-      Object.keys(localStorage).forEach((el) => {
-         try {
-            const r = JSON.parse(localStorage.getItem('key'));
+      if (el === this.element1) {
+        el.querySelector('.items').appendChild(this.gost);
+      } else {
+        this.element1.closest(`.${el.className}`).querySelector('.items').insertBefore(this.gost, this.element1.closest('.item_card'));
+        // console.log(this.element1);
+      }
+    });
 
-            //   console.log(Object.keys(localStorage));
-            //   console.log(r);
+    this.activeDragElement.closest('.item_card').style.top = `${e.clientY - 40 + window.scrollY}px`;
+    this.activeDragElement.closest('.item_card').style.left = `${e.clientX - 40 + window.scrollX}px`;
+  }
 
-            // f.html(r);
-            // this.el.arr.push(r);
-            // console.log(this.el.arr);
-            // this.element.innerHTML = r;
-            console.log(r);
-         } catch (error) {
-            console.log(error);
-         }
-      });
+  onRemove(e) {
+    e.preventDefault();
 
-      //    onUpload(e) {
-      //       // e.preventDefault();
-      //       console.log(e);
-      //       const { target } = e;
-      //       const one = target.files && target.files[0];// если нет левого значения то в правое и не зайдем из-за знака,
-      //       // иначе заходим в левое - ротом правое
-      //       const reader = new FileReader();
-      //      reader.addEventListener('load', (e)=>{
-      // console.log(e)
-      //      });
-      //      reader.readAsText(one)
-      //    }
-   }
+    // variant 1
+    // if (e.target.closest('.item_remove').offsetWidth - e.offsetX <= 23) {
+    //   console.log(e.target.closest('.item_remove').offsetWidth, e.offsetX);
+    //   this.cardManager.onRemove(e);
+    // }
+    // variant 2
+    Array.from(this.element.querySelectorAll('.item_remove')).forEach((el) => {
+      if (el === e.target) {
+        console.log('remove');
+        // el.style.cursor = 'context-menu';
+        this.cardManager.onRemove(e);
+      }
+    });
+  }
 }

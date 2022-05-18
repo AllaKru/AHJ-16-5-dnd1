@@ -1,127 +1,131 @@
+/* eslint-disable no-console */
+// eslint-disable-next-line import/no-cycle
+import Upload from './upload';
+
 export default class CardManager {
-  constructor(element, el) {
-    if (typeof element === "string") {
-      element = document.querySelectorAll(element);
+  constructor(element) {
+    if (typeof element === 'string') {
+      // eslint-disable-next-line no-param-reassign
+      element = document.querySelector(element);
     }
 
-    this.onClick = this.onClick.bind(this);
-    this.onAdd = this.onAdd.bind(this);
-    this.onCard = this.onCard.bind(this);
-    // this.onLoad = this.onLoad.bind(this);
     this.element = element;
-    this.el = el;
+    this.onStorage = this.onStorage.bind(this);
+    this.onClick = this.onClick.bind(this);
+    this.onRemove = this.onRemove.bind(this);
+    this.onCard = this.onCard.bind(this);
     this.change = undefined;
-    this.element.forEach((el) => {
-      this.el = el;
-      //  this.el = e.target.closest(`.${this.el.className}`);
-      this.el.addEventListener("input", this.onAdd);
-      // this.el.addEventListener('click', this.onClick);
-      // // this.el =  e.target.closest(`.${element.className}`)
-      // // this.el.addEventListener('click', this.onClick);
-      // console.log(this.el, el);
-    });
-    // this.element.addEventListener('click', this.onClick);
-    // this.el = e.target.closest(`.${this.el.className}`);
-    // this.el.addEventListener('click', this.onClick);
-    console.log(this.el);
+    this.onMove = this.onMove.bind(this);
   }
 
   onClick(e) {
     //  e.preventDefault();
-    const li = document.createElement("li");
-    li.className = "item";
+
+    // this.el = el;
+
+    const li = document.createElement('li');
+    li.className = 'item';
     li.innerHTML = `<textarea class = 'textarea' 
              placeholder = ...></textarea>
-             <div class = 'block'> <button class = 'button'> Add card</button> <span>х</span>
+             <div class = 'block'> <button class = 'button'> Add card</button> <span class = 'span'>х</span>
              </div>
             `;
-    // if (e.target.closest(`.${this.el.className}`) === this.el) {
-    //    this.el.insertBefore(li, e.target);
-    //    e.target.classList.add('add2');
-    //    this.el.querySelector('.button').addEventListener('click', this.onCard);
-    //    console.log(this.el);
-    // }
+    // this.el = e.target.closest(`.${this.el.className}`);
 
-    this.el = e.target.closest(`.${this.el.className}`);
-    this.el.insertBefore(li, e.target);
-    e.target.classList.add("add2");
-    e.target.classList.add("add2");
-    console.log(this.el);
-    this.el.querySelector(".button").addEventListener("click", this.onCard);
+    // el.insertBefore(li, e.target);
 
-    // this.el.insertBefore(li, e.target);
-    // this.el.querySelector('.button').addEventListener('click', this.onCard);
+    // el.appendChild(li);
 
-    // this.el = e.target.closest(`.${element.className}`);
-    // e.target.closest(`.${this.el.className}`).insertBefore(li, e.target);
-    // });
-
-    // e.target.closest(`.${this.el.className}`).appendChild(li);
-    // e.target.style.display = 'none';
-
-    // li.querySelector('.button').addEventListener('click', ()=>{
-    //    console.log(this.el)
-
-    // this.onAdd(e);
-    // querySelector(e.target.className)
+    // this.element.insertBefore(li, e.target);
+    this.element.querySelector('.items').appendChild(li);
+    e.target.classList.add('add2');
+    this.element.querySelector('.span').addEventListener('click', () => {
+      e.target.classList.remove('add2');
+      // this.el.classList.add('add');
+      li.remove();
+      // this.el.style.display = 'block';
+    });
+    this.element.querySelector('.button').addEventListener('click', this.onCard);
   }
 
-  onAdd(e) {
-    // e.preventDefault();
-    //! !!!!!!!!!!!!!!!
-    // this.el = e.target.closest(`.${this.el.className}`);
-    // if (this.el.querySelector('.textarea').value) {
-    //    this.el.querySelector('.textarea').value = '';
-    //    console.log(7777)
-    // }
-
+  // перезаписываем иннер хтмл
+  // eslint-disable-next-line class-methods-use-this
+  onStorage() {
     localStorage.setItem(
-      "key",
-      document.querySelector(".file-container").innerHTML
-    );
-    // if (e.target.querySelector('button')){
+      'value',
+      JSON.stringify(document.querySelector('.file-container').innerHTML),
 
-    // }
-    console.log(this.el.querySelector(".textarea").value);
-    // e.target.addEventListener('click', () => {
-    //    console.log(e.target)
-    //    e.target.closest('.block').remove();
-    // });
+    );
   }
 
   onCard(e) {
     // e.preventDefault();
-    //! !!!!!!!!!!!
-    this.el = e.target.closest(`.${this.el.className}`);
-    if (!e.target || this.el.querySelector(".textarea").value === "") {
-      const time = setTimeout(() => {
-        console.log(this.el.querySelector(".textarea").value);
-        // this.el.querySelector('.textarea').value = 'Please write something...';
 
-        // this.change = false;
-      }, 100);
-      this.el.querySelector(".block").classList.add("done");
-      // const time2 = setTimeout(() => {
+    // this.el = e.target.closest(`.${this.el.className}`);
+
+    if (!e.target || this.element.querySelector('.textarea').value === '') {
+      // const time = setTimeout(() => {
       //    console.log(this.el.querySelector('.textarea').value);
-      //    this.el.querySelector('.textarea').value = '';
-      // }, 15000);
-      this.el.querySelector(".textarea").addEventListener("click", () => {
-        this.el.querySelector(".block").classList.toggle("done");
-        this.el.querySelector(".textarea").value = "";
-        // this.change = true;
+      //           }, 100);
+      this.element.querySelector('.block').classList.add('done');
+      this.element.querySelector('.textarea').addEventListener('click', () => {
+        this.element.querySelector('.block').classList.toggle('done');
       });
       return;
-      // доделать
     }
-    const div = document.createElement("li");
-    div.className = "item_card";
+    const div = document.createElement('li');
+    div.className = 'item_card item_remove';
+    // div.innerHTML = `<div class = 'card'
+    //          >${this.element.querySelector('.textarea').value}</div>
+    //          `;
     div.innerHTML = `<div class = 'card' 
-               >${this.el.querySelector(".textarea").value}</div>             
+               >${this.element.querySelector('.textarea').value}</div>             
                `;
-    this.el.insertBefore(div, this.el.querySelector(".add"));
-    this.el.querySelector(".add").classList.remove("add2");
+    // div.style.left = `${0}px`;
+    // div.style.top = `${0}px`;
+    this.element.querySelector('.items').appendChild(div);
+    this.element.querySelector('.add').classList.remove('add2');
     // // e.target.closest('.block').remove();
-    this.el.querySelector(".item").remove();
-    console.log(this.el);
+    this.element.querySelector('.item').remove();
+    const removes = Array.from(this.element.querySelectorAll('.item_remove'));
+    removes.forEach((el) => {
+      el.addEventListener('click', () => {
+        if (e.target === el) {
+          console.log(el);
+          // щелкала и событие было див кард,
+          //  а ближе к крестику  - получается событие стало ли. и сработал ремув.
+          el.remove();
+          // e.target.remove();
+          this.onStorage();
+        }
+        console.log(e.target);
+
+        // this.onStorage();
+      });
+    });
+    //       this.element.forEach((el)=>{
+    // el.appendChild()
+    //       })
+    console.log(this.element);
+    this.onStorage();
+    this.onMove();
+  }
+
+  onRemove(e) {
+    e.target.closest('.item_remove').remove();
+    e.target.remove();
+    this.onStorage();
+  }
+
+  onMove() {
+    this.element.querySelectorAll('.item_card').forEach((el) => {
+      // попробовать айьемс и ретурн потом
+      const cl = new Upload('.file-container');
+      //  cl.cardManager.element = this.element;
+      el.addEventListener('mousedown', cl.onStartDrag);
+      this.onStorage();
+      //! !!!!!!!!
+      // console.log(cl.cardManager.element);
+    });
   }
 }
