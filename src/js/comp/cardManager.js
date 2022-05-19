@@ -92,6 +92,7 @@ export default class CardManager {
       el.addEventListener('click', () => {
         if (e.target === el) {
           console.log(el);
+
           // щелкала и событие было див кард,
           //  а ближе к крестику  - получается событие стало ли. и сработал ремув.
           el.remove();
